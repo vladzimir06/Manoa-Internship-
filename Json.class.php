@@ -1,8 +1,7 @@
 <?php 
 class Json{ 
-   // include 'DBAcces.php';
-    private $jsonFile = "D:\Manoa\MAMP\htdocs\Demo\JsonDataBase.json"; 
-     
+ private $jsonFile = "D:\Manoa\MAMP\htdocs\Demo\JsonDataBase.json";   
+   
     public function getRows(){ 
         if(file_exists($this->jsonFile)){ 
             $jsonData = file_get_contents($this->jsonFile); 

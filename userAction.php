@@ -1,10 +1,24 @@
 <?php 
+
+if(! defined('Work with database'))
+{
+    header("Location: index.php");
+}
+
 session_start(); 
- 
+
 // подключаем файл с иничиализацияе БД
 require_once 'Json.class.php'; 
 $db = new Json(); 
 
+//массив пользователей
+$members = $db->getRows(); 
+if(!empty($sessData['status']['msg']))
+{ 
+    $statusMsg = $sessData['status']['msg']; 
+    $statusMsgType = $sessData['status']['type'];
+    unset($_SESSION['sessData']['status']); 
+}
 // URL по умолчанию
 $redirectURL = 'index.php'; 
 
@@ -12,51 +26,51 @@ if(isset($_POST['userSubmit']))
 { 
     // присваиваем полям значения
     $id = $_POST['id']; 
-    $name = trim(strip_tags($_POST['name'])); 
-    $email = trim(strip_tags($_POST['email'])); 
-    $password = trim(strip_tags($_POST['password'])); 
-    $login = trim(strip_tags($_POST['login'])); 
+    $name = strip_tags($_POST['name']); 
+    $email = strip_tags($_POST['email']); 
+    $password = strip_tags($_POST['password']); 
+    $login = strip_tags($_POST['login']); 
     $confirm_password = trim(strip_tags($_POST['confirm_password'])); 
-
     
-    $password = md5($password."md5");
-    $confirm_password = md5($confirm_password."md5");
+    $user = $login;
+    setcookie("user", $user, time() + 3600, "/");
     
-    $id_str = ''; 
-    if(!empty($id)){ 
-        $id_str = '?id='.$id; 
-    } 
-     
     // "Валидация" полей
-    $errorMsg = ''; 
-    if(empty($name)){ 
-        $errorMsg .= '<p>Введите имя.</p>'; 
-    } 
-    if(empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)){ 
-        $errorMsg .= '<p>Введите карректный email.</p>'; 
-    } 
-    if(empty($password)){ 
-        $errorMsg .= '<p>Введите пароль.</p>'; 
-    } 
-    if(empty($login)){ 
-        $errorMsg .= '<p>Введите логи.</p>'; 
-    } 
-    if(mb_strlen($login) < 6)
+    $errorMsg = '';
+    if(mb_strlen($name) < 2 || mb_strlen($name) > 2 || !preg_match('/^[a-z]+$/i', $name) || empty($name) || $name != trim($name))
     {
-          $errorMsg .= '<p>Недопустимая длинная логина</p>';  
-    }   
-    if(mb_strlen($name) < 2 || mb_strlen($name) > 2 || !preg_match('/^[a-z]+$/i', $name))
-    {
-        $errorMsg .= '<p>Имя не верно</p>';
+        $errorMsg .= 'Имя не корректно.'; 
     }
-    if(mb_strlen($password) < 6 ||   !preg_match('/^[0-9A-Za-zА-Яа-я]*$/', $password ))
-    {
-        $errorMsg .= '<p>Пароль не верен</p>';
+    else if(empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)){ 
+        $errorMsg .= 'Введите карректный email.'; 
     }
-    if($password != $confirm_password)
+    else if(mb_strlen($password) < 6 ||   !preg_match('/^[0-9A-Za-zА-Яа-я]*$/', $password) || empty($password) || $password != trim($password))
     {
-        $errorMsg .= '<p>Пароль не совпадает</p>';
+        $errorMsg .= 'Пароль не корректный.';
     }
+    else if($password != $confirm_password)
+    {
+        $errorMsg .= 'Пароль не совпадает.';
+    }
+    else if($login != trim($login) || mb_strlen($login) < 6 || empty($login))
+    {
+        $errorMsg .= 'Недопустимый логин.'; 
+    }
+    else if(!empty($members))
+    { 
+        $count = 0; 
+        foreach($members as $row)
+        { 
+            $count++;
+            if($row['login'] == $login || $row['email'] == $email)
+            {
+                $errorMsg .= 'Данный пользоваетель уже существует ';
+                //break;
+            }        
+        } 
+    }
+
+    $password = md5($password."md5");
 
     // структура данных 
     $userData = array( 
@@ -101,9 +115,9 @@ if(isset($_POST['userSubmit']))
             } 
         } 
     }else{ 
+        //если errorMsg не пуст то передаем.
         $sessData['status']['type'] = 'error'; 
-        $sessData['status']['msg'] = '<p>Please fill all the mandatory fields.</p>'.$errorMsg; 
-         
+        $sessData['status']['msg'] = $errorMsg;
         // Url для перехода
         $redirectURL = 'AddUser.php'.$id_str; 
     } 
@@ -127,5 +141,5 @@ elseif(($_REQUEST['action_type'] == 'delete') && !empty($_GET['id'])){
  
 // Переводит пользователя по "Url"
 header("Location:".$redirectURL); 
-exit(); 
+exit();
 ?>

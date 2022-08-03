@@ -1,5 +1,8 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <?php 
+
+define('Add', True);
+
 $FILENAME = "D:\Manoa\MAMP\htdocs\Demo\JsonDataBase.json";
 session_start(); 
  
@@ -34,8 +37,6 @@ if(!empty($sessData['status']['msg'])){
 </div>
 <?php } ?>
 
-
-
 <html lang = "en">
  <head>
   <meta charset="utf-8">
@@ -43,15 +44,8 @@ if(!empty($sessData['status']['msg'])){
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Форма регистрации</title>
   
-  <script type = "text/javascript" src="/jsjquary.js">
-  </script>
-
-  <script type = "text/javascript" src="/form.js">
-  </script>
-
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
-
-  <link rel="stylesheet" href="css/style.css">
+ <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+  <script src="ajax.js"></script>
  
  </head>
  <body>
@@ -65,6 +59,8 @@ if(!empty($sessData['status']['msg'])){
         <div class = "row">
             <div class = "col" id = 'result'>
                 <h1> Форма регистрации </h1>
+                <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+                 <script src="ajax.js"></script>
                     <form action="AddUser.php" method ="post" id = "foo">
 
                         <input type="hidden" name="id" value="<?php echo !empty($memberData['id'])?$memberData['id']:''; ?>">
@@ -73,15 +69,17 @@ if(!empty($sessData['status']['msg'])){
                         
                     </form>
             </div>
-             <div class = "col">
+             <div class = "col">    
                 <h1> Форма авторизации </h1>
                     <form action="auth.php" method ="post" id ="ajax.js">
-                        <input type = "text" class = "form-control" name = "loginA" id = "loginA" placeholder = "Введите имя">
+                        <label> Login </label>
+                        <input type = "text" class = "form-control" name = "loginA" id = "loginA" placeholder = "Введите логин">
+                        <span class="error"> <?php echo $loginError?> </span>
                         <br>
-
-                        <input type = "text" class = "form-control" name = "passwordA" id = "passwordA" placeholder = "Введите пароль">
+                        <label> Password </label>
+                        <input type = "password" class = "form-control" name = "passwordA" id = "passwordA" placeholder = "Введите пароль">
+                        <span class="error"> <?php echo $error?> </span>
                         <br>
-                        
                         <?php if (!file_get_contents($FILENAME)):?>
                            <p> No users</p>
                         <?php else: ?>
@@ -91,7 +89,7 @@ if(!empty($sessData['status']['msg'])){
                     </form>
             </div>
         </div>
-        
+        <div id="result_form"></div> 
         <?php else: ?>
         <p>hello <?= $_COOKIE['user'] ?> <br> <a href="exit.php"> Выход</a> _ </p> 
         <?php endif;?>
