@@ -1,6 +1,6 @@
 <?php 
 class Json{ 
- private $jsonFile = "D:\Manoa\MAMP\htdocs\Demo\JsonDataBase.json";   
+ private $jsonFile = "JsonDataBase.json";   
    
     public function getRows(){ 
         if(file_exists($this->jsonFile)){ 
