@@ -72,7 +72,7 @@ else if($statusMsg == 'Пароль не верен.')
             <div class = "col" id = 'result'>
                 <h1> Форма регистрации </h1>
             
-            <form method="post"  >
+            <form method="post" action ="userAction.php" >
          
             <div class="form-group">
                 <label>Name</label>
@@ -83,25 +83,25 @@ else if($statusMsg == 'Пароль не верен.')
             
             <div class="form-group">
                 <label>Email</label>
-                <input type="email" class="form-control" name="email" placeholder="Enter your email">
+                <input type="email" class="form-control" name="Email" placeholder="Enter your email">
                 <span class="error"> <?php echo $ErrorEmail?></span>
             </div>
             
             <div class="form-group">
                 <label>password</label>
-                <input type="text" class="form-control" name="password" placeholder="Enter password">
+                <input type="text" class="form-control" name="Password" placeholder="Enter password">
                 <span class="error"> <?php echo $ErrorPassword?></span>
             </div>
 
             <div class="form-group">
                 <label>confirm_password</label>
-                <input type="password" class="form-control" name="confirm_password" placeholder="confirm_password">
+                <input type="password" class="form-control" name="Confirm_password" placeholder="confirm_password">
                 <span class="error"> <?php echo $ErrorConfirm?></span>
                 </div>
 
             <div class="form-group">
                 <label>login</label>
-                <input type="text" class="form-control" name="login" placeholder="Enter login">
+                <input type="text" class="form-control" name="Login" placeholder="Enter login">
                 <span class="error"> <?php echo $ErrorLogin?></span>
             </div>
             
@@ -143,7 +143,7 @@ else if($statusMsg == 'Пароль не верен.')
 
     <script>
         $(document).ready(function(){
-            $('button').on('click', function(){
+            $('button.userSubmit').on('click', function(){
                 var name = $('input.name').val();
                 var email = $('input.Email').val();
                 var password = $('input.Password').val();
@@ -151,13 +151,18 @@ else if($statusMsg == 'Пароль не верен.')
                 var confirm_password = $('input.Confirm_password').val();
 
                 $.ajax({
-                    url: "userAction.php",
-                    type: " POST",
-                    datatype: 'html',
-                    data: {name: name, email: email, password: password, login: login, confirm_password: confirm_password}
+                    url: 'http://localhost/Demo/userAction.php',
+                    type: 'POST',
+                    data: {name: name, Email: email, Password: password, Login: login, Confirm_password: confirm_password}
                 })
                 .done(function() {
                     console.log("success");
+                })
+                .fail(function() {
+                    console.log("fail");
+                })
+                .always(function() {
+                    console.log("complete");
                 });
                 
                 

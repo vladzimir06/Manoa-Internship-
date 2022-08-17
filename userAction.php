@@ -21,10 +21,10 @@ if(isset($_POST['userSubmit']))
 { 
     // присваиваем полям значения 
     $name = strip_tags($_POST['name']); 
-    $email = strip_tags($_POST['email']); 
-    $password = strip_tags($_POST['password']); 
-    $login = strip_tags($_POST['login']); 
-    $confirm_password = strip_tags($_POST['confirm_password']); 
+    $email = strip_tags($_POST['Email']); 
+    $password = strip_tags($_POST['Password']); 
+    $login = strip_tags($_POST['Login']); 
+    $confirm_password = strip_tags($_POST['Confirm_password']); 
     
     //User validation
     $errorMsg = '';
@@ -74,10 +74,10 @@ if(isset($_POST['userSubmit']))
 
     // структура данных 
     $userData = array( 
-        'name' => $_POST['name'], 
-        'email' => $_POST['email'], 
-        'password' => $_POST['password'], 
-        'login' => $_POST['login'] 
+        'name' => $name, 
+        'email' => $email, 
+        'password' => $password, 
+        'login' => $login 
     ); 
      
     // хранение и занесение данных в сессию 
